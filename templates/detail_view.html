@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Record Detail
+{% endblock title %}
+
+
+{% block main %}
+<main class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-slate-900">Repair Record Details</h1>
+        <p class="mt-1 text-slate-600">Full details for Record #12345</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <!-- ICT Section -->
+        <div class="p-6">
+                <h2 class="text-lg font-semibold text-slate-800 border-b pb-2 mb-4">ICT Logged Information</h2>
+                <dl class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Department</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Finance</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Contact Person</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Alice Johnson</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Hardware</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Dell Latitude 5420</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Complaint</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Laptop is not turning on. No power light.</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Action Taken</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Replaced faulty AC adapter and reseated the battery connection. System now boots up correctly.</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">ICT Personnel</dt>
+                        <dd class="sm:col-span-2 text-slate-800">John Smith</dd>
+                    </div>
+                </dl>
+        </div>
+        
+        <!-- Department Confirmation Section -->
+        <div class="bg-slate-50 p-6 border-t">
+            <h2 class="text-lg font-semibold text-slate-800 mb-4">Department Confirmation</h2>
+
+            <!-- SCENARIO 1: If NOT yet confirmed -->
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-r-lg" role="alert">
+                <p class="font-bold">Pending Confirmation</p>
+                <p class="text-sm">A confirmation link has been sent to the department but has not yet been completed.</p>
+            </div>
+            
+            <!-- SCENARIO 2: If it IS confirmed -->
+            <!-- <dl class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Confirmation Status</dt>
+                        <dd class="sm:col-span-2 font-bold text-green-700">Confirmed</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Condition After Repair</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Satisfactory</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Signature</dt>
+                        <dd class="sm:col-span-2 text-slate-800">Alice Johnson</dd>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+                        <dt class="font-medium text-slate-500">Confirmed At</dt>
+                        <dd class="sm:col-span-2 text-slate-800">October 27, 2023, 10:15 AM</dd>
+                    </div>
+            </dl> -->
+        </div>
+    </div>
+</main>
+{% endblock main %}
+    

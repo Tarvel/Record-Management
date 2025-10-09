@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %} | ICT Record Manager</title>
+    {% tailwind_css %}
+    <style> body { background-color: #f1f5f9; } </style>
+</head>
+<body class="pb-20 md:pb-0">
+    {% comment %} desktop {% endcomment %}
+    <nav class="bg-white shadow-sm hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-8">
+                    <div class="font-bold text-lg text-slate-800">ICT Repair Tracker</div>
+                    <a href="#" class="text-sm font-medium text-white bg-slate-800 px-3 py-2 rounded-md">Dashboard</a>
+                    <a href="#" class="text-sm font-medium text-slate-600 hover:text-slate-900">Create Record</a>
+                </div>
+                <div class="text-sm text-slate-600">
+                    <span>Welcome, admin@ict.com</span> |
+                    <a href="#" class="font-medium text-blue-600 hover:text-blue-800">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+    {% block main %}
+        
+    {% endblock main %}
+        
+
+    {% comment %} mobile {% endcomment %}
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 h-16 flex justify-around items-center md:hidden">
+        <a href="#" class="flex flex-col items-center justify-center text-blue-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <span class="text-xs font-medium">Dashboard</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-blue-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-xs">Create</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center text-slate-500 hover:text-blue-600">
+             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H3"></path></svg>
+            <span class="text-xs">Logout</span>
+        </a>
+    </div>
+</body>
+</html>
