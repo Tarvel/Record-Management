@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils.text import slugify
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -36,6 +37,7 @@ class RepairRecord(models.Model):
     )
     signature = models.CharField(max_length=255, blank=True, null=True, help_text="Filled by department")
     is_confirmed = models.BooleanField(default=False)
+    slug = models.SlugField(unique=True, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -51,3 +53,15 @@ class RepairRecord(models.Model):
         """Mark the record as confirmed."""
         self.is_confirmed = True
         self.save()
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(f"{self.department_name}-{self.hardware_type}")
+            slug = base_slug
+            counter = 1
+            while RepairRecord.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
