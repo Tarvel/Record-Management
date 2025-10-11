@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import LoginForm
 
 
 # @login_required
@@ -32,4 +34,30 @@ def invalidTokenPage(request):
 
 
 def loginPage(request):
-    return render(request, "base/login.html")
+    form = LoginForm()
+    method = request.method
+    if method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now signed in as {email}")
+                next_url = request.POST.get("next") or "dashboard"
+                return redirect(next_url)
+            else:
+                messages.error(request, "ERROR, invalid credentials")
+                return redirect("login")
+
+        else:
+            form = LoginForm()
+
+    context = {
+        "form": form,
+        "next": request.GET.get("next", ""),
+    }
+    return render(request, "base/login.html", context)
