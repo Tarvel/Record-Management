@@ -4,7 +4,7 @@ This report explains the thought process, planning, and decisions that went into
 
 ### Problem Analysis and Solution Development
 
-While planning the **Record Management System** for the ICT Department of the University of Ilorin Teaching Hospital (UITH), a few practical issues quickly came up. At first, the idea was to let users from different departments log their complaints directly through the system. But this raised several concerns about authenticity, access control and data security.
+While planning the **Record Management System** for the ICT Department of the *{confidential}*, a few practical issues quickly came up. At first, the idea was to let users from different departments log their complaints directly through the system. But this raised several concerns about authenticity, access control and data security.
 
 #### Problem Identification
 
