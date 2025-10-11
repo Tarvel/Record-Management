@@ -1,48 +1,95 @@
 import uuid
-from django.db import models
 from django.utils.text import slugify
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
-User = get_user_model()
+class CustomUserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+    def _create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
+
+
+class CustomUser(AbstractUser):
+    username = None
+    email = models.EmailField(_('email address'), unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
 
 
 class RepairRecord(models.Model):
     CONDITION_CHOICES = [
-        ('satisfactory', 'Satisfactory'),
-        ('unsatisfactory', 'Unsatisfactory'),
+        ("satisfactory", "Satisfactory"),
+        ("unsatisfactory", "Unsatisfactory"),
     ]
 
     department_name = models.CharField(max_length=255)
-    user_name = models.CharField(max_length=255, help_text="Person who brought the device")
+    user_name = models.CharField(
+        max_length=255, help_text="Person who brought the device"
+    )
     hardware_type = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=20)
     nature_of_complaint = models.TextField()
     ict_personnel = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="repair_records",
-        help_text="Logged-in ICT staff handling this repair"
+        help_text="Logged-in ICT staff handling this repair",
     )
     maintenance_action_taken = models.TextField(blank=True, null=True)
     department_email = models.EmailField()
-    confirmation_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    confirmation_token = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True
+    )
     condition_after_repair = models.CharField(
         max_length=20,
         choices=CONDITION_CHOICES,
         blank=True,
         null=True,
-        help_text="To be filled by department after repair"
+        help_text="To be filled by department after repair",
     )
-    signature = models.CharField(max_length=255, blank=True, null=True, help_text="Filled by department")
+    signature = models.CharField(
+        max_length=255, blank=True, null=True, help_text="Filled by department"
+    )
     is_confirmed = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
         verbose_name = "Repair Record"
         verbose_name_plural = "Repair Records"
 
@@ -64,4 +111,3 @@ class RepairRecord(models.Model):
                 counter += 1
             self.slug = slug
         super().save(*args, **kwargs)
-
