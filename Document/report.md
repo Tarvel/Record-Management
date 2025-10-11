@@ -1,6 +1,6 @@
 # Record Management System | Project Report
 
-This report explains the thought process, planning, and decisions that went into building the Record Management System for the ICT Department of the *{confidential}*. It covers how the initial idea was formed, the challenges identified during early discussions, and how those challenges shaped the final system design. The goal is to show the reasoning behind each feature and how the solution evolved to meet real departmental needs.
+This report explains the thought process, planning, and decisions that went into building the Record Management System for the ICT Department of the *{confidential}*. It covers how the initial idea was formed, the challenges identified during early discussions and how those challenges shaped the final system design. The goal is to show the reasoning behind each feature and how the solution evolved to meet real departmental needs.
 
 ### Problem Analysis and Solution Development
 
