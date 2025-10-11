@@ -2,14 +2,15 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+from .models import CustomUser, RepairRecord
+
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['email', 'first_name', 'last_name', 'is_staff']
-    ordering = ('email',)
+    list_display = ["email", "first_name", "last_name", "is_staff"]
+    ordering = ("email",)
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
@@ -30,10 +31,15 @@ class CustomUserAdmin(UserAdmin):
     )
 
     add_fieldsets = (
-        (None, {
-            "classes": ("wide",),
-            "fields": ("email", "password", "password2"),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("first_name", "last_name", "email", "password", "password2"),
+            },
+        ),
     )
 
+
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(RepairRecord)
