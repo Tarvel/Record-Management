@@ -19,8 +19,8 @@
                     <a href="{% url 'create_record' %}" class="text-sm font-medium {% if page == 'create' %} text-white bg-slate-700 px-3 py-2 rounded-md hover:bg-slate-600 {% else %} text-slate-300 hover:text-white {% endif %} transition">Create Record</a>
                 </div>
                 <div class="text-sm text-slate-300">
-                    <span>Welcome, admin@ict.com</span> |
-                    <a href="#" class="font-medium text-blue-400 hover:text-blue-300 transition">Logout</a>
+                    <span>Welcome, {{request.user.get_full_name|default:request.user.email }}</span> |
+                    <a href="{% url 'logout' %}" class="font-medium text-blue-400 hover:text-blue-300 transition">Logout</a>
                 </div>
             </div>
         </div>
