@@ -1,36 +1,26 @@
 <div id="record-list">
+    {% comment %} Mobile {% endcomment %}
     <div class="space-y-4 md:hidden">
+
+        
+        {% for record in records  %}
         <!-- Example Card 1: Confirmed -->
         <div class="bg-white rounded-xl shadow-md p-4">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="font-bold text-slate-800">Finance</p>
-                    <p class="text-sm text-slate-500">Dell Laptop</p>
+                    <p class="font-bold text-slate-800">{{record.department_name}}</p>
+                    <p class="text-sm text-slate-500">{{record.hardware_type}}</p>
                 </div>
-                <span class="text-xs font-medium bg-green-100 text-green-800 px-2.5 py-1 rounded-full">Confirmed</span>
+                {% if record.is_confirmed %} <span class="text-xs font-medium bg-green-100 text-green-800 px-2.5 py-1 rounded-full">Confirmed</span>{% else %} <span class="text-xs font-medium bg-yellow-100 text-yellow-800 px-2.5 py-1 rounded-full">Pending</span>{% endif %}
             </div>
             <div class="mt-4 border-t pt-4 text-sm text-slate-600 space-y-1">
-                <p><strong>ICT Staff:</strong> John Smith</p>
-                <p><strong>Date:</strong> 2023-10-26</p>
+                <p><strong>ICT Staff:</strong>{{record.ict_personnel.get_full_name}}</p>
+                <p><strong>Date:</strong> {{record.updated_at|date:"jS" }}-{{record.updated_at|date:"M"}}-{{record.updated_at|date:"Y" }}</p>
             </div>
-            <a href="#" class="block text-center mt-4 w-full bg-slate-100 text-slate-700 font-medium py-2 rounded-md hover:bg-slate-200">View Details</a>
+            <a href="{% url 'record_detail' record.slug %}" class="block text-center mt-4 w-full bg-slate-100 text-slate-700 font-medium py-2 rounded-md hover:bg-slate-200">View Details</a>
         </div>
-
-        <!-- Example Card 2: Pending -->
-        <div class="bg-white rounded-xl shadow-md p-4">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="font-bold text-slate-800">Human Resources</p>
-                    <p class="text-sm text-slate-500">HP Printer</p>
-                </div>
-                <span class="text-xs font-medium bg-yellow-100 text-yellow-800 px-2.5 py-1 rounded-full">Pending</span>
-            </div>
-            <div class="mt-4 border-t pt-4 text-sm text-slate-600 space-y-1">
-                <p><strong>ICT Staff:</strong> Jane Doe</p>
-                <p><strong>Date:</strong> 2023-10-25</p>
-            </div>
-            <a href="#" class="block text-center mt-4 w-full bg-slate-100 text-slate-700 font-medium py-2 rounded-md hover:bg-slate-200">View Details</a>
-        </div>
+        {% endfor %}
+            
     </div>
 
     <div class="hidden md:block bg-white rounded-xl shadow-md overflow-hidden">
@@ -46,24 +36,21 @@
                         <th class="relative px-6 py-3"><span class="sr-only">View</span></th>
                     </tr>
                 </thead>
+
+                {% for record in records  %}
                 <tbody class="bg-white divide-y divide-slate-200">
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">Finance</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Dell Laptop</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">John Smith</td>
-                        <td class="px-6 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">2023-10-26</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a href="#" class="text-blue-600 hover:text-blue-900">View</a></td>
-                    </tr>
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">Human Resources</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">HP Printer</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">Jane Doe</td>
-                        <td class="px-6 py-4 whitespace-nowrap"><span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">2023-10-25</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a href="#" class="text-blue-600 hover:text-blue-900">View</a></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{{record.department_name}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{record.hardware_type}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{record.ict_personnel.get_full_name}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{% if record.is_confirmed %}<span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>{% else %}<span class="px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>{% endif %}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">{{record.updated_at|date:"jS" }}-{{record.updated_at|date:"M"}}-{{record.updated_at|date:"Y" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><a href="{% url 'record_detail' record.slug %}" class="text-blue-600 hover:text-blue-900">View</a></td>
                     </tr>
                 </tbody>
+                {% endfor %}
+            
+                
             </table>
         </div>
     </div>

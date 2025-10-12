@@ -3,12 +3,13 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.contrib import messages
-from .forms import LoginForm
+from .forms import LoginForm, RepairRecordForm
 from .models import RepairRecord
 
 
 @login_required(login_url="login")
 def dashboardPage(request):
+    page = "dashboard"
     search = request.GET.get("search", "")
     status = request.GET.get("status", "")
     date = request.GET.get("date", "")
@@ -17,50 +18,91 @@ def dashboardPage(request):
 
     if search:
         records = (
-            records.filter(department__icontains=search)
+            records.filter(department_name__icontains=search)
             | records.filter(user_name__icontains=search)
-            | records.filter(ict_personnel__icontains=search)
+            | records.filter(ict_personnel__first_name__icontains=search)
+            | records.filter(ict_personnel__last_name__icontains=search)
         )
     if status and status != "All":
-        records = records.filter(status=status)
+        if status == "Pending Confirmation":
+            records = records.filter(is_confirmed=False)
+        elif status == "Confirmed":
+            records = records.filter(is_confirmed=True)
+        else:
+            records = (
+                records.filter(department_name__icontains=search)
+                | records.filter(user_name__icontains=search)
+                | records.filter(ict_personnel__first_name__icontains=search)
+                | records.filter(ict_personnel__last_name__icontains=search)
+            )
     if date:
-        records = records.filter(date=date)
+        print(date)
+        records = records.filter(updated_at__date=date)
 
     paginator = Paginator(records, 5)
-    page = request.GET.get("page", 1)
-    record_obj = paginator.get_page(page)
+    pages = request.GET.get("page", 1)
+    record_obj = paginator.get_page(pages)
 
     context = {
+        "page": page,
+        "search": search,
+        "status": status,
+        "date": date,
         "records": record_obj,
     }
 
     if request.htmx:
-        return render(request, "base.partials/dashboard_htmx.html", context)
+        return render(request, "base/partials/dashboard_htmx.html", context)
 
     return render(request, "base/dashboard.html", context)
 
 
 @login_required(login_url="login")
-def recordDetail(request):
-    return render(request, "base/detail_view.html")
+def recordDetail(request, slug):
+    record = RepairRecord.objects.get(slug=slug)
+
+    context = {"record": record}
+    return render(request, "base/detail_view.html", context)
 
 
 @login_required(login_url="login")
 def createRecord(request):
     page = "create"
+    form = RepairRecordForm()
+    if request.method == "POST":
+        form = RepairRecordForm(request.POST)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.ict_personnel = request.user
+            record.save()
 
     context = {
         "page": page,
+        "form": form,
     }
     return render(request, "base/create_record.html", context)
 
 
-def confirmationPage(request):
-    return render(request, "base/confirmation_page.html")
+def confirmationPage(request, confirmation_token):
+    record = RepairRecord.objects.get(confirmation_token=confirmation_token)
+    if record.is_confirmed:
+        return render(request, "base/invalid_token.html")
+    if request.method == "POST":
+        condition = request.POST.get("condition")
+        signature = request.POST.get("signature")
+
+        record.signature = signature
+        record.is_confirmed = True
+        record.condition_after_repair = condition
+        record.save()
+
+        return redirect("success")
+
+    return render(request, "base/confirmation_page.html", {"record": record})
 
 
-def invalidTokenPage(request):
-    return render(request, "base/invalid_token.html")
+def sucessPage(request):
+    return render(request, "base/success.html")
 
 
 def loginPage(request):

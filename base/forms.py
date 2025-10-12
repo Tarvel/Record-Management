@@ -1,7 +1,20 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser
+from .models import CustomUser, RepairRecord
 from django import forms
 from django.core.validators import FileExtensionValidator
+
+class RepairRecordForm(forms.ModelForm):
+    class Meta:
+        model = RepairRecord
+        fields = [
+            "department_name",
+            "user_name",
+            "hardware_type",
+            "phone_number",
+            "nature_of_complaint",
+            "maintenance_action_taken",
+            "department_email",
+        ]
 
 
 class CustomUserCreationForm(UserCreationForm):

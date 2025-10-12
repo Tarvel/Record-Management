@@ -15,6 +15,7 @@
                         type="text"
                         name="search"
                         id="search"
+                        value="{{search}}"
                         placeholder="Search department or user..."
                         class="pl-10 pr-3 py-2.5 w-full text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     >
@@ -28,9 +29,9 @@
                     name="status"
                     class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
-                    <option>All</option>
-                    <option>Pending Confirmation</option>
-                    <option>Confirmed</option>
+                    <option {% if status == "All" %} selected {% endif %} >All </option>
+                    <option {% if status == "Pending Confirmation" %} selected {% endif %} >Pending Confirmation</option>
+                    <option {% if status == "Confirmed" %} selected {% endif %} >Confirmed</option>
                 </select>
             </div>
 
@@ -40,6 +41,7 @@
                     type="date"
                     name="date"
                     id="date"
+                    value="{{date}}"
                     class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
             </div>
