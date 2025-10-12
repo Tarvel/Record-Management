@@ -50,7 +50,6 @@ if DEBUG:
 
 
 if DEBUG:
-    # Add django_browser_reload middleware only in DEBUG mode
     MIDDLEWARE += [
         "django_browser_reload.middleware.BrowserReloadMiddleware",
     ]
