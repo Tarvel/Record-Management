@@ -1,21 +1,51 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.contrib import messages
 from .forms import LoginForm
+from .models import RepairRecord
 
 
-# @login_required
+@login_required(login_url="login")
 def dashboardPage(request):
-    return render(request, "base/dashboard.html")
+    search = request.GET.get("search", "")
+    status = request.GET.get("status", "")
+    date = request.GET.get("date", "")
+
+    records = RepairRecord.objects.all()
+
+    if search:
+        records = (
+            records.filter(department__icontains=search)
+            | records.filter(user_name__icontains=search)
+            | records.filter(ict_personnel__icontains=search)
+        )
+    if status and status != "All":
+        records = records.filter(status=status)
+    if date:
+        records = records.filter(date=date)
+
+    paginator = Paginator(records, 5)
+    page = request.GET.get("page", 1)
+    record_obj = paginator.get_page(page)
+
+    context = {
+        "records": record_obj,
+    }
+
+    if request.htmx:
+        return render(request, "base.partials/dashboard_htmx.html", context)
+
+    return render(request, "base/dashboard.html", context)
 
 
-# @login_required
+@login_required(login_url="login")
 def recordDetail(request):
     return render(request, "base/detail_view.html")
 
 
-# @login_required
+@login_required(login_url="login")
 def createRecord(request):
     page = "create"
 
@@ -61,3 +91,9 @@ def loginPage(request):
         "next": request.GET.get("next", ""),
     }
     return render(request, "base/login.html", context)
+
+
+@login_required(login_url="login")
+def logoutPage(request):
+    logout(request)
+    return redirect("home")
