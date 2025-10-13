@@ -1,58 +1,58 @@
-<div class="bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-2xl shadow-sm mb-10 border border-slate-200">
-        <form 
-        hx-get="{% url 'dashboard' %}"
-        hx-target="#record-list"
-        hx-trigger="change delay:300ms, keyup delay:500ms from:#search, submit"
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
-            
-            <div>
-                <label for="search" class="block text-sm font-semibold text-slate-700 mb-1">Search</label>
-                <div class="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
-                    </svg>
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        value="{{search}}"
-                        placeholder="Search department or user..."
-                        class="pl-10 pr-3 py-2.5 w-full text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                    >
-                </div>
-            </div>
-
-            <div>
-                <label for="status" class="block text-sm font-semibold text-slate-700 mb-1">Status</label>
-                <select
-                    id="status"
-                    name="status"
-                    class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                >
-                    <option {% if status == "All" %} selected {% endif %} >All </option>
-                    <option {% if status == "Pending Confirmation" %} selected {% endif %} >Pending Confirmation</option>
-                    <option {% if status == "Confirmed" %} selected {% endif %} >Confirmed</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="date" class="block text-sm font-semibold text-slate-700 mb-1">Date</label>
+<div class="bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-2xl shadow-sm mb-6 border border-slate-200">
+    <form 
+    hx-get="{% url 'dashboard' %}"
+    hx-target="#record-list"
+    hx-trigger="change delay:300ms, keyup delay:500ms from:#search, submit"
+    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-end">
+        
+        <div class="col-span-2 md:col-span-3 lg:col-span-1">
+            <label for="search" class="block text-sm font-semibold text-slate-700 mb-1">Search</label>
+            <div class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
+                </svg>
                 <input
-                    type="date"
-                    name="date"
-                    id="date"
-                    value="{{date}}"
-                    class="w-full px-3 py-2.5 text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    type="text"
+                    name="search"
+                    id="search"
+                    value="{{search}}"
+                    placeholder="Search department or user..."
+                    class="pl-10 pr-3 py-2 w-full text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 >
             </div>
+        </div>
 
-            <div class="flex justify-end">
-                <button type="submit" class="w-full md:w-auto flex items-center justify-center gap-2 bg-blue-600 text-white font-medium py-2.5 px-5 rounded-lg shadow hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L14 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 018 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
-                        </svg>
-                        Filter
-                </button>
-            </div>
-        </form>
-    </div>
+        <div class="col-span-1">
+            <label for="status" class="block text-sm font-semibold text-slate-700 mb-1">Status</label>
+            <select
+                id="status"
+                name="status"
+                class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            >
+                <option {% if status == "All" %} selected {% endif %} >All </option>
+                <option {% if status == "Pending Confirmation" %} selected {% endif %} >Pending Confirmation</option>
+                <option {% if status == "Confirmed" %} selected {% endif %} >Confirmed</option>
+            </select>
+        </div>
+
+        <div class="col-span-1">
+            <label for="date" class="block text-sm font-semibold text-slate-700 mb-1">Date</label>
+            <input
+                type="date"
+                name="date"
+                id="date"
+                value="{{date}}"
+                class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            >
+        </div>
+
+        <div class="col-span-2 md:col-span-1 flex justify-end">
+            <button type="submit" class="w-full md:w-auto flex items-center justify-center gap-2 bg-blue-600 text-white font-medium py-2 px-5 rounded-lg shadow hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L14 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 018 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+                    </svg>
+                    Filter
+            </button>
+        </div>
+    </form>
+</div>

@@ -5,6 +5,8 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from .forms import LoginForm, RepairRecordForm
 from .models import RepairRecord
+from django.urls import reverse
+from .utils.emails import send_create_confirmation_email_async, send_return_confirmation_email_async
 
 
 @login_required(login_url="login")
@@ -72,9 +74,29 @@ def createRecord(request):
     if request.method == "POST":
         form = RepairRecordForm(request.POST)
         if form.is_valid():
+            print(request.POST)
             record = form.save(commit=False)
             record.ict_personnel = request.user
             record.save()
+
+            confirmation_path = reverse(
+                "confirmation_page",
+                kwargs={"confirmation_token": record.confirmation_token},
+            )
+            confirmation_link = request.build_absolute_uri(confirmation_path)
+
+            send_create_confirmation_email_async(
+                to_email=record.department_email,
+                confirmation_link=confirmation_link,
+                hardware_type=record.hardware_type,
+            )
+            messages.success(
+                request,
+                f"An email has been sent to {record.department_email} for confirmation",
+            )
+            return redirect("dashboard")
+    else:
+        form = RepairRecordForm()
 
     context = {
         "page": page,
@@ -95,6 +117,18 @@ def confirmationPage(request, confirmation_token):
         record.is_confirmed = True
         record.condition_after_repair = condition
         record.save()
+
+        record_url_path = reverse(
+            "record_detail",
+            kwargs={"slug": record.slug},
+        )
+        record_url = request.build_absolute_uri(record_url_path)
+        print(record.ict_personnel.email, record_url)
+        send_return_confirmation_email_async(
+            to_email=record.ict_personnel.email,
+            record_url=record_url,
+            record=record,
+        )
 
         return redirect("success")
 
@@ -122,7 +156,7 @@ def loginPage(request):
                 next_url = request.POST.get("next") or "dashboard"
                 return redirect(next_url)
             else:
-                messages.error(request, "ERROR, invalid credentials")
+                messages.error(request, "ERROR, Invalid Credentials")
                 return redirect("login")
 
         else:
@@ -138,4 +172,4 @@ def loginPage(request):
 @login_required(login_url="login")
 def logoutPage(request):
     logout(request)
-    return redirect("home")
+    return redirect("login")

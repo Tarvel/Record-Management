@@ -1,0 +1,41 @@
+<html>
+  <body style="font-family: Arial, sans-serif; background-color: #f8fafc; color: #334155; padding: 20px; margin: 0;">
+    <div style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+      
+      <h2 style="color: #0f172a; margin-bottom: 16px; text-align: center;">Repair Confirmation Received</h2>
+      
+      <p style="font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+        A user has confirmed the status of a recent repair. The record has been updated automatically.
+      </p>
+
+      <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; font-size: 14px; line-height: 1.7;">
+        <p style="margin: 0 0 8px 0;"><strong>Record ID:</strong> #{{ record.id }}</p>
+        <p style="margin: 0 0 8px 0;"><strong>Department:</strong> {{ record.department_name }}</p>
+        <p style="margin: 0 0 8px 0;"><strong>User Feedback:</strong> 
+            <strong style="color: {% if record.condition_after_repair == 'satisfactory' %}#16a34a{% else %}#dc2626{% endif %};">
+                {{ record.condition_after_repair }}
+            </strong>
+        </p>
+        <p style="margin: 0 0 8px 0;"><strong>Confirmed By:</strong> {{ record.signature }}</p>
+        <p style="margin: 0;"><strong>Date Confirmed:</strong> {{ record.updated_at|date:"F j, Y, P" }}</p>
+      </div>
+
+      <p style="text-align: center; margin: 24px 0;">
+        <a href="{{ record_url }}"
+           style="display: inline-block; padding: 10px 20px; background-color: #2563eb; color: #ffffff; 
+                  font-weight: 600; text-decoration: none; border-radius: 6px;">
+          View Full Record
+        </a>
+      </p>
+
+      <p style="font-size: 13px; line-height: 1.6; color: #64748b; text-align: center; margin-top: 16px;">
+        This is an automated notification. No further action is required unless the feedback was non-satisfactory.
+      </p>
+
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
+      <p style="font-size: 12px; color: #94a3b8; text-align: center; margin: 0;">
+        © {{ current_year|date:"Y" }} UITH ICT Department
+      </p>
+    </div>
+  </body>
+</html>
