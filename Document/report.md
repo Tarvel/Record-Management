@@ -6,6 +6,8 @@ This report explains the thought process, planning, and decisions that went into
 
 While planning the **Record Management System** for the ICT Department of the *{confidential}*, a few practical issues quickly came up. At first, the idea was to let users from different departments log their complaints directly through the system. But this raised several concerns about authenticity, access control and data security.
 
+The project was prompted by the way **repair records were being managed manually**, using pen and paper. This method was not only inefficient but also prone to errors, los, and delays. In a modern world and especially within an ICT department such a process shouldn’t still rely on manual entries. The aim was to digitize and streamline this process, making it more secure, structured and reliable.
+
 #### Problem Identification
 
 Some of the main issues identified were:
