@@ -6,7 +6,10 @@ from django.contrib import messages
 from .forms import LoginForm, RepairRecordForm
 from .models import RepairRecord
 from django.urls import reverse
-from .utils.emails import send_create_confirmation_email_async, send_return_confirmation_email_async
+from .utils.emails import (
+    send_create_confirmation_email_async,
+    send_return_confirmation_email_async,
+)
 
 
 @login_required(login_url="login")

@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -84,7 +84,7 @@ DATABASES = {
 }
 
 
-AUTH_USER_MODEL = 'base.CustomUser'
+AUTH_USER_MODEL = "base.CustomUser"
 
 
 # Password validation
