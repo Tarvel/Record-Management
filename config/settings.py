@@ -125,12 +125,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles", "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_build")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-CSRF_TRUSTED_ORIGINS = ["https://*.ngrok-free.app"]  # Change this shit later
+CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"]  # Change this shit later
 
 DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
