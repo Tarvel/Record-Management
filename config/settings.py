@@ -132,7 +132,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"]  # Change this shit later
+CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com/"]  # Change this shit later
 
 DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL"))}
 
