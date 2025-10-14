@@ -3,7 +3,7 @@
 set -e
 
 echo "Collecting static files..."
-python3.10 manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 echo "loading fixture data"
-python3.10 manage.py loaddata events.json
+python3 manage.py loaddata events.json
