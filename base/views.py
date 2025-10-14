@@ -27,6 +27,7 @@ def dashboardPage(request):
             | records.filter(user_name__icontains=search)
             | records.filter(ict_personnel__first_name__icontains=search)
             | records.filter(ict_personnel__last_name__icontains=search)
+            | records.filter(hardware_type__icontains=search)
         )
     if status and status != "All":
         if status == "Pending Confirmation":
@@ -44,7 +45,7 @@ def dashboardPage(request):
         print(date)
         records = records.filter(updated_at__date=date)
 
-    paginator = Paginator(records, 5)
+    paginator = Paginator(records, 6)
     pages = request.GET.get("page", 1)
     record_obj = paginator.get_page(pages)
 
@@ -176,3 +177,8 @@ def loginPage(request):
 def logoutPage(request):
     logout(request)
     return redirect("login")
+
+
+def password_change_done(request):
+    messages.success(request, "Password change successfully!")
+    return redirect("dashboard")
