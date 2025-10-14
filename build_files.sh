@@ -1,15 +1,16 @@
 #!/bin/sh
-
 set -e
 
-echo "installing pip"
+echo "Installing pip..."
 python3 -m pip install --upgrade pip
 
-echo "installing requirements "
+export PATH=$PATH:/python312/bin
+
+echo "Installing requirements..."
 pip install -r requirements.txt
 
 echo "Collecting static files..."
 python3 manage.py collectstatic --noinput
 
-echo "loading fixture data"
-python3 manage.py loaddata events.json
+# echo "Loading fixture data..."
+# python3 manage.py loaddata events.json
