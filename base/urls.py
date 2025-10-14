@@ -1,5 +1,4 @@
 from django.contrib.auth import views as auth_views
-from .forms import TailwindPasswordChangeForm
 from django.urls import path
 from . import views
 
@@ -19,7 +18,9 @@ urlpatterns = [
         ),
         name="password_change",
     ),
-    path("password/change/done", views.password_change_done, name="password_change_done"),
+    path(
+        "password/change/done", views.password_change_done, name="password_change_done"
+    ),
     path("confirmation/success/", views.sucessPage, name="success"),
     path("login/", views.loginPage, name="login"),
     path("logout/", views.logoutPage, name="logout"),
