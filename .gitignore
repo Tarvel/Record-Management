@@ -15,3 +15,4 @@ venv/
 .env
 .vscode
 test.txt.html
+sendgrid_backend

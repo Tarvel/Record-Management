@@ -22,7 +22,7 @@ def _send_email(subject: str, to_email: str, html_template: str, context: dict) 
             to=[to_email],
         )
         email.attach_alternative(html_content, "text/html")
-        email.send(fail_silently=False)  # False for debugging/testing
+        email.send(fail_silently=False)
 
         logger.info("Email '%s' sent to %s", subject, to_email)
         return True

@@ -127,7 +127,10 @@ def confirmationPage(request, confirmation_token):
             kwargs={"slug": record.slug},
         )
         record_url = request.build_absolute_uri(record_url_path)
-        print(record.ict_personnel.email, record_url)
+        import logging
+        logger = logging.getLogger(__name__)
+        print("RENDER LOG TEST: View was hit!")
+        logger.warning("RENDER LOGGER TEST: View was definitely hit!")
         send_return_confirmation_email_async(
             to_email=record.ict_personnel.email,
             record_url=record_url,
