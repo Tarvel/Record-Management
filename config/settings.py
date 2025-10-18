@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "theme",
     "django_htmx",
     "whitenoise.runserver_nostatic",
+    "anymail",
 ]
 
 MIDDLEWARE = [
@@ -145,10 +146,17 @@ DATABASES = {"default": dj_database_url.config(default=os.getenv("DATABASE_URL")
 # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.sendgrid.net"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "apikey"
+# EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API_KEY")
+# DEFAULT_FROM_EMAIL = "tarvelb.stud@gmail.com"
+
+
+EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+ANYMAIL = {
+    "SENDGRID_API_KEY": os.environ.get("SENDGRID_API_KEY"),
+}
 DEFAULT_FROM_EMAIL = "tarvelb.stud@gmail.com"
