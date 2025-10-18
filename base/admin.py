@@ -103,7 +103,7 @@ class CustomUserAdmin(UserAdmin):
                             email=email,
                             first_name=first_name,
                             last_name=last_name,
-                            password=f"UITH-STAFF-{last_name}",
+                            password=f"UITH-STAFF-{last_name.capitalize()}",
                         )
                         users_created += 1
                     except Exception as e:
