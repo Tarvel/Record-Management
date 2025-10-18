@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.core.paginator import Paginator
+from datetime import datetime
 from django.contrib import messages
 from .forms import LoginForm, RepairRecordForm
 from .models import RepairRecord
@@ -19,35 +21,33 @@ def dashboardPage(request):
     status = request.GET.get("status", "")
     date = request.GET.get("date", "")
 
-    records = RepairRecord.objects.all()
+    records = RepairRecord.objects.select_related('ict_personnel').all()
 
     if search:
-        records = (
-            records.filter(department_name__icontains=search)
-            | records.filter(user_name__icontains=search)
-            | records.filter(ict_personnel__first_name__icontains=search)
-            | records.filter(ict_personnel__last_name__icontains=search)
-            | records.filter(hardware_type__icontains=search)
+        records = records.filter(
+            Q(department_name__icontains=search) |
+            Q(user_name__icontains=search) |
+            Q(ict_personnel__first_name__icontains=search) |
+            Q(ict_personnel__last_name__icontains=search) |
+            Q(hardware_type__icontains=search)
         )
+
     if status and status != "All":
         if status == "Pending Confirmation":
             records = records.filter(is_confirmed=False)
         elif status == "Confirmed":
             records = records.filter(is_confirmed=True)
-        else:
-            records = (
-                records.filter(department_name__icontains=search)
-                | records.filter(user_name__icontains=search)
-                | records.filter(ict_personnel__first_name__icontains=search)
-                | records.filter(ict_personnel__last_name__icontains=search)
-            )
+
     if date:
-        print(date)
-        records = records.filter(updated_at__date=date)
+        try:
+            parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
+            records = records.filter(updated_at__date=parsed_date)
+        except ValueError:
+            pass
 
     paginator = Paginator(records, 6)
-    pages = request.GET.get("page", 1)
-    record_obj = paginator.get_page(pages)
+    page_number = request.GET.get("page", 1)
+    record_obj = paginator.get_page(page_number)
 
     context = {
         "page": page,
