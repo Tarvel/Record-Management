@@ -9,7 +9,9 @@ from django.utils.translation import gettext_lazy as _
 from .forms import CustomUserCreationForm, CustomUserChangeForm, CsvUploadForm
 from .models import CustomUser, RepairRecord
 
-admin.site.site_title = "UITH ICT Admin Panel"
+admin.site.site_header = "UITH ICT Record Manager"
+admin.site.site_title = "UITH ICT Admin"
+admin.site.index_title = "Welcome to the Admin Panel"
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
