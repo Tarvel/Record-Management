@@ -4,13 +4,12 @@ import io
 from django.contrib import admin, messages
 from django.shortcuts import render, redirect
 from django.urls import path
-
-from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from .forms import CustomUserCreationForm, CustomUserChangeForm, CsvUploadForm
 from .models import CustomUser, RepairRecord
 
+admin.site.site_title = "UITH ICT Admin Panel"
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
