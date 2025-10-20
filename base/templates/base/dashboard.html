@@ -3,7 +3,13 @@
 
 
 {% block title %}
+
+{% if page == "dashboard" %}
     Dashboard
+    {% else %}
+    Drafts
+{% endif %}
+
 {% endblock title %}
     
 
@@ -12,15 +18,23 @@
 {% block main %}
 <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        
+        {% if page == "dashboard" %}
         <div>
             <h1 class="text-3xl font-bold text-slate-900">Dashboard</h1>
+            <p class="mt-2 text-sm text-gray-700">A list of all repair records in the system.</p>
         </div>
-        <a href="{% url 'create_record' %}" class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-            Create New Record
-        </a>
+
+        {% else %}
+
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">Draft Records</h1>
+            <p class="text-slate-600 mt-1 text-sm">Records that have not been published yet.</p>
+        </div>
+        {% endif %}
+            
+
+    
     </div>
 
     <div id="filter-search"> 

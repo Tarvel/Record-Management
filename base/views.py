@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -21,15 +21,17 @@ def dashboardPage(request):
     status = request.GET.get("status", "")
     date = request.GET.get("date", "")
 
-    records = RepairRecord.objects.select_related('ict_personnel').all()
+    records = RepairRecord.objects.select_related("ict_personnel").filter(
+        is_published=True
+    )
 
     if search:
         records = records.filter(
-            Q(department_name__icontains=search) |
-            Q(user_name__icontains=search) |
-            Q(ict_personnel__first_name__icontains=search) |
-            Q(ict_personnel__last_name__icontains=search) |
-            Q(hardware_type__icontains=search)
+            Q(department_name__icontains=search)
+            | Q(user_name__icontains=search)
+            | Q(ict_personnel__first_name__icontains=search)
+            | Q(ict_personnel__last_name__icontains=search)
+            | Q(hardware_type__icontains=search)
         )
 
     if status and status != "All":
@@ -70,6 +72,54 @@ def recordDetail(request, slug):
     context = {"record": record}
     return render(request, "base/detail_view.html", context)
 
+@login_required(login_url="login")
+def draftPage(request):
+    page = "drafts"
+    search = request.GET.get("search", "")
+    date = request.GET.get("date", "")
+
+    records = RepairRecord.objects.select_related("ict_personnel").filter(
+        is_published=False #, ict_personnel=request.user
+    )
+
+    if search:
+        records = records.filter(
+            Q(department_name__icontains=search)
+            | Q(user_name__icontains=search)
+            | Q(ict_personnel__first_name__icontains=search)
+            | Q(ict_personnel__last_name__icontains=search)
+            | Q(hardware_type__icontains=search)
+        )
+
+    if date:
+        try:
+            parsed_date = datetime.strptime(date, "%Y-%m-%d").date()
+            records = records.filter(updated_at__date=parsed_date)
+        except ValueError:
+            pass
+
+    paginator = Paginator(records, 6)
+    page_number = request.GET.get("page", 1)
+    record_obj = paginator.get_page(page_number)
+
+    context = {
+        "page": page,
+        "search": search,
+        "date": date,
+        "records": record_obj,
+    }
+
+    if request.htmx:
+        return render(request, "base/partials/dashboard_htmx.html", context)
+    return render(request, "base/dashboard.html", context)
+
+
+def draftDetail(request, slug):
+    record = RepairRecord.objects.get(slug=slug)
+
+    context = {"record": record}
+    return render(request, "base/draft_detail.html", context)
+
 
 @login_required(login_url="login")
 def createRecord(request):
@@ -81,6 +131,7 @@ def createRecord(request):
             print(request.POST)
             record = form.save(commit=False)
             record.ict_personnel = request.user
+            record.is_published = True
             record.save()
 
             confirmation_path = reverse(
@@ -108,6 +159,45 @@ def createRecord(request):
     }
     return render(request, "base/create_record.html", context)
 
+@login_required(login_url="login")
+def editDraft(request, slug):
+    page = "edit"
+    repair_record_obj = get_object_or_404(RepairRecord, slug=slug, is_published=False)
+    form = RepairRecordForm(instance=repair_record_obj)
+    if request.method == "POST":
+        form = RepairRecordForm(request.POST)
+        if form.is_valid():
+            print(request.POST)
+            record = form.save(commit=False)
+            record.ict_personnel = request.user
+            record.is_published = True
+            record.save()
+
+            confirmation_path = reverse(
+                "confirmation_page",
+                kwargs={"confirmation_token": record.confirmation_token},
+            )
+            confirmation_link = request.build_absolute_uri(confirmation_path)
+
+            send_create_confirmation_email_async(
+                to_email=record.department_email,
+                confirmation_link=confirmation_link,
+                hardware_type=record.hardware_type,
+            )
+            messages.success(
+                request,
+                f"An email has been sent to {record.department_email} for confirmation",
+            )
+            return redirect("dashboard")
+    else:
+        form = RepairRecordForm(instance=repair_record_obj)
+
+    context = {
+        "page": page,
+        "form": form,
+    }
+    return render(request, "base/create_record.html", context)
+
 
 def confirmationPage(request, confirmation_token):
     record = RepairRecord.objects.get(confirmation_token=confirmation_token)
@@ -128,6 +218,7 @@ def confirmationPage(request, confirmation_token):
         )
         record_url = request.build_absolute_uri(record_url_path)
         import logging
+
         logger = logging.getLogger(__name__)
         print("RENDER LOG TEST: View was hit!")
         logger.warning("RENDER LOGGER TEST: View was definitely hit!")

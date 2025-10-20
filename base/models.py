@@ -92,6 +92,7 @@ class RepairRecord(models.Model):
         max_length=255, blank=True, null=True, help_text="Filled by department"
     )
     is_confirmed = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False) 
     slug = models.SlugField(unique=True, blank=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -103,6 +104,13 @@ class RepairRecord(models.Model):
 
     def __str__(self):
         return f"{self.department_name} - {self.hardware_type} ({self.user_name})"
+
+    @property
+    def status(self):
+        if self.is_confirmed is True:
+            return "Confirmed"
+        else:
+            return "Pending Confirmation"
 
     def mark_confirmed(self):
         """Mark the record as confirmed."""
