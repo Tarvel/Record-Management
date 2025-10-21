@@ -80,7 +80,7 @@ def draftPage(request):
     date = request.GET.get("date", "")
 
     records = RepairRecord.objects.select_related("ict_personnel").filter(
-        is_published=False  # , ict_personnel=request.user
+        is_published=False, ict_personnel=request.user
     )
 
     if search:
