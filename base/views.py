@@ -289,6 +289,20 @@ def logoutPage(request):
     return redirect("login")
 
 
+@login_required(login_url="login")
 def password_change_done(request):
     messages.success(request, "Password change successfully!")
+    return redirect("dashboard")
+
+
+@login_required(login_url="login")
+def deleteDraft(request, slug):
+    repair_record_obj = get_object_or_404(
+        RepairRecord, slug=slug, is_published=False, ict_personnel=request.user
+    )
+    messages.success(
+        request,
+        f"Draft for {repair_record_obj.hardware_type} from {repair_record_obj.department_name} has been deleted",
+    )
+    repair_record_obj.delete()
     return redirect("dashboard")

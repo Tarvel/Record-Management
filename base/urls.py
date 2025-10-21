@@ -9,6 +9,7 @@ urlpatterns = [
     path("drafts/edit/<str:slug>", views.editDraft, name="edit_draft"),
     path("record/<str:slug>", views.recordDetail, name="record_detail"),
     path("record/create/", views.createRecord, name="create_record"),
+    path('draft/delete/<str:slug>', views.deleteDraft, name="delete_draft"),
     path(
         "confirmation/<str:confirmation_token>",
         views.confirmationPage,
