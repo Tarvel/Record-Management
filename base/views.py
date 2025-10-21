@@ -72,6 +72,7 @@ def recordDetail(request, slug):
     context = {"record": record}
     return render(request, "base/detail_view.html", context)
 
+
 @login_required(login_url="login")
 def draftPage(request):
     page = "drafts"
@@ -79,7 +80,7 @@ def draftPage(request):
     date = request.GET.get("date", "")
 
     records = RepairRecord.objects.select_related("ict_personnel").filter(
-        is_published=False #, ict_personnel=request.user
+        is_published=False  # , ict_personnel=request.user
     )
 
     if search:
@@ -131,25 +132,38 @@ def createRecord(request):
             print(request.POST)
             record = form.save(commit=False)
             record.ict_personnel = request.user
-            record.is_published = True
-            record.save()
+            action = request.POST.get("action")
 
-            confirmation_path = reverse(
-                "confirmation_page",
-                kwargs={"confirmation_token": record.confirmation_token},
-            )
-            confirmation_link = request.build_absolute_uri(confirmation_path)
+            if action == "save_draft":
+                record.is_published = False
+                record.save()
+                messages.success(
+                    request,
+                    "Record added to drafts!",
+                )
+                return redirect("dashboard")
 
-            send_create_confirmation_email_async(
-                to_email=record.department_email,
-                confirmation_link=confirmation_link,
-                hardware_type=record.hardware_type,
-            )
-            messages.success(
-                request,
-                f"An email has been sent to {record.department_email} for confirmation",
-            )
-            return redirect("dashboard")
+            elif action == "publish":
+                print("Publish button was clicked!")
+                record.is_published = True
+                record.save()
+
+                confirmation_path = reverse(
+                    "confirmation_page",
+                    kwargs={"confirmation_token": record.confirmation_token},
+                )
+                confirmation_link = request.build_absolute_uri(confirmation_path)
+
+                send_create_confirmation_email_async(
+                    to_email=record.department_email,
+                    confirmation_link=confirmation_link,
+                    hardware_type=record.hardware_type,
+                )
+                messages.success(
+                    request,
+                    f"An email has been sent to {record.department_email} for confirmation",
+                )
+                return redirect("dashboard")
     else:
         form = RepairRecordForm()
 
@@ -158,6 +172,7 @@ def createRecord(request):
         "form": form,
     }
     return render(request, "base/create_record.html", context)
+
 
 @login_required(login_url="login")
 def editDraft(request, slug):
@@ -193,6 +208,7 @@ def editDraft(request, slug):
         form = RepairRecordForm(instance=repair_record_obj)
 
     context = {
+        "record": repair_record_obj,
         "page": page,
         "form": form,
     }

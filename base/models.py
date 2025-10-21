@@ -66,7 +66,7 @@ class RepairRecord(models.Model):
         max_length=255, help_text="Person who brought the device"
     )
     hardware_type = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
     nature_of_complaint = models.TextField()
     ict_personnel = models.ForeignKey(
         CustomUser,
@@ -77,7 +77,7 @@ class RepairRecord(models.Model):
         help_text="Logged-in ICT staff handling this repair",
     )
     maintenance_action_taken = models.TextField(blank=True, null=True)
-    department_email = models.EmailField()
+    department_email = models.EmailField(blank=True, null=True)
     confirmation_token = models.UUIDField(
         default=uuid.uuid4, editable=False, unique=True
     )
